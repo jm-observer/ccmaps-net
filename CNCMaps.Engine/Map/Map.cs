@@ -473,6 +473,8 @@ namespace CNCMaps.Engine.Map {
 					PaletteType pt;
 
 					if (obj is MapTile) {
+						Logger.Debug("MapTile choice different palettes!!!!");
+
 						lt = LightingType.Full;
 						pt = PaletteType.Iso;
 					}
@@ -1011,7 +1013,7 @@ namespace CNCMaps.Engine.Map {
 				_theater.Draw(obj, _drawingSurface);
 				double pct = 100.0 * i / orderedObjs.Count;
 				if (pct > lastReported + 5) {
-					Logger.Info("Drawing map... {0}%", Math.Round(pct, 0));
+					// Logger.Info("Drawing map... {0}%", Math.Round(pct, 0));
 					lastReported = pct;
 				}
 			}

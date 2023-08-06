@@ -45,6 +45,12 @@ namespace CNCMaps.Engine.Rendering {
 			var heightBuffer = ds.GetHeightBuffer();
 			Palette p = tile.Palette;
 
+			// for (int index = 0; index < p.Colors.Length; index ++) {
+				Logger.Debug("index {0}: {1},{2},{3}", index, p.Colors[index].B, p.Colors[index].G, p.Colors[index].R);
+			// }
+			// return;
+			
+
 			// calculate tile index -> pixel index
 			Point offset = new Point(tile.Dx * tmp.BlockWidth / 2, (tile.Dy - tile.Z) * tmp.BlockHeight / 2);
 
@@ -56,8 +62,11 @@ namespace CNCMaps.Engine.Rendering {
 				tile.Layer.GridTouchedBy[centerGridTile.Dx, centerGridTile.Dy / 2] = tile;
 			}
 
-			Logger.Trace("Drawing TMP file {0} (subtile {1}) at ({2},{3})", tmp.FileName, tile.SubTile, offset.X, offset.Y);
-
+			if (!tmp.FileName.StartsWith("Cliff32")) {
+				// return;
+				// Logger.Debug("Drawing TMP file {0} (subtile {1}) at ({2},{3})", tmp.FileName, tile.SubTile, offset.X, offset.Y);
+			}
+			
 			int stride = ds.BitmapData.Stride;
 
 			int halfCx = tmp.BlockWidth / 2,
@@ -118,11 +127,25 @@ namespace CNCMaps.Engine.Rendering {
 
 			if (!img.HasExtraData) return; // we're done now
 
+			// if (true) {
+			// 	return;
+			// }
+			
+			// if (!tmp.FileName.StartsWith("Water"))
+			// {
+				// Logger.Debug("Drawing TMP file {0} (subtile {1}) at ({2},{3})", tmp.FileName, tile.SubTile, offset.X, offset.Y);
+			// }
+			int orgin_x = offset.X;
+			int orgin_y = offset.Y;
 			offset.X += img.ExtraX - img.X;
 			offset.Y += img.ExtraY - img.Y;
 			w = w_low + stride * offset.Y + 3 * offset.X;
 			zIdx = offset.X + offset.Y * ds.Width;
 			rIdx = 0;
+			if (tmp.FileName.StartsWith("Cliff32"))
+			{
+				Logger.Debug("Drawing TMP file {0} (subtile {1}) at ({2},{3}) ({4},{5})", tmp.FileName, tile.SubTile, orgin_x, orgin_y, offset.X, offset.Y);
+			}
 
 
 			// identify extra-data affected tiles for cutoff
@@ -134,8 +157,14 @@ namespace CNCMaps.Engine.Rendering {
 				for (int bx = extraScreenBounds.Left; bx < extraScreenBounds.Right; bx += tmp.BlockWidth / 2) {
 					var gridTileNoZ = tile.Layer.GetTileScreen(new Point(bx, by), true, true);
 					if (gridTileNoZ != null) {
-						Logger.Trace("Tile at ({0},{1}) has extradata affecting ({2},{3})", tile.Dx, tile.Dy, gridTileNoZ.Dx,
-							gridTileNoZ.Dy);
+						if (tmp.FileName.StartsWith("Cliff32"))
+						{
+							Logger.Debug("Tile at ({0},{1}) has extradata affecting ({2},{3})", tile.Dx, tile.Dy, gridTileNoZ.Dx,
+								gridTileNoZ.Dy);
+							
+						}
+						
+						
 						tile.Layer.GridTouched[gridTileNoZ.Dx, gridTileNoZ.Dy / 2] |= TileLayer.TouchType.ByExtraData;
 						tile.Layer.GridTouchedBy[gridTileNoZ.Dx, gridTileNoZ.Dy / 2] = tile;
 					}

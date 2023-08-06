@@ -4,6 +4,7 @@ using System.IO;
 using CNCMaps.Engine.Map;
 using CNCMaps.FileFormats;
 using CNCMaps.FileFormats.Map;
+using NLog;
 
 namespace CNCMaps.Engine.Rendering {
 
@@ -54,6 +55,7 @@ namespace CNCMaps.Engine.Rendering {
 		}
 
 		public void ApplyLighting(Lighting l, int level = 0, bool applyTints = true) {
+			Logger.Debug("ApplyLighting Palette!!!");
 			_ambientMult = l.Ambient - l.Ground + l.Level * level;
 			if (applyTints) {
 				_redMult = l.Red;
@@ -91,6 +93,7 @@ namespace CNCMaps.Engine.Rendering {
 			_greenMult = Math.Min(Math.Max(_greenMult, 0), clipMult);
 			_blueMult = Math.Min(Math.Max(_blueMult, 0), clipMult);
 			double rmult, gmult, bmult;
+			Logger.Debug("Recalculate Palette!!!");
 			for (int i = 0; i < 256; i++) {
 				rmult = _ambientMult * _redMult;
 				gmult = _ambientMult * _greenMult;
