@@ -473,7 +473,7 @@ namespace CNCMaps.Engine.Map {
 					PaletteType pt;
 
 					if (obj is MapTile) {
-						Logger.Debug("MapTile choice different palettes!!!!");
+						Logger.Debug("GameObj(MapTile) choice different palettes!!!!");
 
 						lt = LightingType.Full;
 						pt = PaletteType.Iso;
